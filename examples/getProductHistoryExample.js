@@ -89,7 +89,9 @@ getHistData(gs1, function(err, body, response) {
     if(err)
         console.log(err);
     else {
-        let resp = JSON.parse(response)
+        let resp = response;
+        if (typeof(response) == 'string')
+            resp = JSON.parse(response);
         console.log(JSON.stringify(resp, null, 2));
     }
 });

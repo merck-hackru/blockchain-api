@@ -1,6 +1,9 @@
 /**
  * Created by gopinath on 3/9/19.
  */
+/**
+ * Created by gopinath on 3/9/19.
+ */
 const request = require('request');
 
 const base_url = process.env.BASE_URL || 'https://mercklab-poc-sl-api.mybluemix.net/api';
@@ -42,7 +45,7 @@ function getApiToken(cb) {
     });
 }
 
-function getData(gs1, cb) {
+function addData(gs1, cb) {
 
 
     getApiToken(function(err, token) {
@@ -52,8 +55,8 @@ function getData(gs1, cb) {
 
         } else {
             let payload = {
-                url: base_url + '/products/' + gs1.gtin + '/serialNumber/' + gs1.serialNumber + '/lotNumber/' + gs1.lotNumber + '/expiryDate/' + gs1.exprDate,
-                method: 'GET',
+                url: base_url + '/products',
+                method: 'POST',
                 header: {
                     "Content-Type": "application/json"
                 },
@@ -61,6 +64,7 @@ function getData(gs1, cb) {
                     'bearer': token
                 },
                 proxy:'',
+                json: gs1,
                 rejectUnauthorized: false,
                 requestCert: true,
                 agent: false
@@ -78,16 +82,33 @@ function getData(gs1, cb) {
  Example Key
  */
 var gs1 = {
-    gtin : '08806555018611',
-    serialNumber: '180914578754',
-    lotNumber: 'R036191',
-    exprDate: "2021-07-07T00:00:00.000Z"  // Note Date should be string
+    "gtin" : '12206555018611',  // Change the keys or else you will get Product exists error 
+    "serialNumber": '180914578754',
+    "lotNumber": 'R036191',
+    "expiryDate": "2021-07-07T00:00:00.000Z", // Keys
+    "mfgDateTime": "2016-07-07T00:00:00.000Z",
+    "tradeItemDesc": "Test Product",
+    "logisticStatus": 'Dummy Status',
+    "packStatus": 'Dummy Pack Status',
+    "disposition": 'Dummy disposition',
+    "globalLocationNumber": '12345678' ,
+    "objectStatus": 'Dumy Object Status',
+    "epicIdUri": '11:22:33',
+    "gs1ElementString": 'String1',
+    "country": 'USA',
+    "deliveryNumber": "unknown",
+    "fileName": "unknown",
+    "extraAttribute1": "fingerprint",
+    "extraAttribute2": "extraAttribute2",
+    "longitude": "0.0",
+    "latitude": "0.0"
 };
 
-getData(gs1, function(err, body, response) {
+addData(gs1, function(err, body, response) {
     if(err)
         console.log(err);
     else {
+        console.log(response);
         let resp = response;
         if (typeof(response) == 'string')
             resp = JSON.parse(response);
